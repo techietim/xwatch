@@ -46,7 +46,7 @@ do
         usage
         exit 0
     else
-        echo $(basename $0)": unknown or incomplete argument $1"
+        echo "$progname: unknown or incomplete argument $1"
         exit 1
     fi
     shift
