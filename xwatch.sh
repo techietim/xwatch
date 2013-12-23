@@ -9,7 +9,7 @@
 logfile=$HOME"/.xwatch"
 timeformat="%Y-%m-%d %H:%M:%S"
 active_id=""
-active_pid=""
+active_pid="-1"
 active_proc=""
 active_title=""
 force=0
@@ -96,6 +96,10 @@ do
         then
             # Active window's PID
             active_pid=$(grep -Po '\d+$' 2> /dev/null <<< "$line")
+            if [ $? != "0" ]
+            then
+                active_pid="-1"
+            fi
         else
             # Active window's title changed
             title=$(sed 's/^_NET_WM_NAME = "//;s/"$//' <<< "$line")
@@ -103,7 +107,12 @@ do
             then
                 timestamp=$(date +"$timeformat" | escapequote)
                 cleantitle=$(escapequote <<< "$title")
-                cmdline=$(cat /proc/$active_pid/cmdline 2> /dev/null | escapequote)
+                if [ $active_pid != "-1" ]
+                then
+                    cmdline=$(cat /proc/$active_pid/cmdline 2> /dev/null | escapequote)
+                else
+                    cmdline=""
+                fi
                 printf "\"%s\",\"%s\",\"%s\"\n" "$timestamp" "$cleantitle" "$cmdline" >> "$logfile" 2> /dev/null
                 active_title="$title"
                 force=0
