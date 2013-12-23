@@ -6,6 +6,10 @@ Logs when X windows become active (in CSV format).  The following fields are log
 - Window title
 - `cmdline` for the process
 
+Example entry:
+
+    "2013-12-23 13:35:19","GitHub - Chromium","/usr/lib/chromium/chromium"
+
 A log entry is created when focus moves to another window or the active window's title changes.
 
 ## Usage
