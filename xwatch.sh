@@ -8,6 +8,7 @@
 
 logfile=$HOME"/.xwatch"
 timeformat="%Y-%m-%d %H:%M:%S"
+root_proc=""
 active_id=""
 active_pid="-1"
 active_proc=""
@@ -53,18 +54,27 @@ do
 done
 
 # Create FIFO
+root_file=$(mktemp -u)
+mkfifo "$root_file"
+
+# Trap and cleanup
+function killwait {
+    kill "$1" 2> /dev/null
+    wait "$1" 2> /dev/null
+}
+
 function cleanup {
+    killwait $root_proc
+    killwait $active_proc
     rm -f "$root_file" 2> /dev/null
     exit 0
 }
-
-root_file=$(mktemp -u)
-mkfifo "$root_file"
 
 trap cleanup SIGINT
 
 # Start listening on the root window
 xprop -notype -root -spy 0c _NET_ACTIVE_WINDOW > "$root_file" 2> /dev/null &
+root_proc=$!
 
 function escapequote {
     sed 's/"/\\"/'
@@ -83,8 +93,7 @@ do
         fi
         if [ -n "$active_proc" ]
         then
-            kill $active_proc 2> /dev/null
-            wait $active_proc 2> /dev/null
+            killwait $active_proc
         fi
         xprop -notype -id $window_id -spy _NET_WM_PID _NET_WM_NAME > "$root_file" 2> /dev/null &
         active_proc=$!
