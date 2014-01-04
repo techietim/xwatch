@@ -29,7 +29,7 @@ Example entry:
     - `_NET_ACTIVE_WINDOW` (root window)
     - `_NET_WM_PID`
     - `_NET_WM_NAME`
-2. Unicode characters are not properly logged if the current charset is not UTF-8.
+2. Unicode characters are not properly logged if the current charset is not UTF-8
 3. Tested with [i3](http://i3wm.org/)
 
 ## License
