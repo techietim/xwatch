@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# xwatch.sh - logs which X windows are active in CSV format
+# xwatch.sh - logs when X windows become active (in CSV format)
 #
 # Author: Tim Cooper <tim.cooper@layeh.com>
 # License: MIT (see LICENSE)
